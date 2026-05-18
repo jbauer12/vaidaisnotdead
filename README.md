@@ -1,6 +1,8 @@
 # vaidaisnotdead
 Ghost Template from the website of the organization Vaida is not dead e.V.
 
+> Production hosting follows [Self-hosting Ghost on Google Cloud (always free)](https://scottleechua.com/blog/self-hosting-ghost-on-google-cloud/).
+
 ## Local Development
 
 Start the stack from the `debugging/` directory:
