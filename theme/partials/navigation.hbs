@@ -1,0 +1,55 @@
+<header class="site-header">
+    <div class="container">
+        <nav class="nav-inner">
+            <a class="site-logo" href="{{@site.url}}">
+                {{#if @site.logo}}
+                <img src="{{@site.logo}}" alt="{{@site.title}}" class="nav-logo-img">
+                {{else}}
+                {{@site.title}}
+                {{/if}}
+            </a>
+            <ul class="nav-links">
+                {{#foreach @site.navigation}}
+                    <li><a href="{{this.url}}"{{#if active}} class="active"{{/if}}>{{label}}</a></li>
+                {{/foreach}}
+            </ul>
+            <button class="nav-burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <ul class="mobile-menu-links">
+        {{#foreach @site.navigation}}
+            <li><a href="{{this.url}}"{{#if active}} class="active"{{/if}}>{{label}}</a></li>
+        {{/foreach}}
+    </ul>
+</div>
+
+<script>
+(function () {
+    var burger = document.querySelector('.nav-burger');
+    var menu   = document.getElementById('mobile-menu');
+    if (!burger || !menu) return;
+
+    burger.addEventListener('click', function () {
+        var isOpen = menu.classList.toggle('is-open');
+        burger.classList.toggle('is-open', isOpen);
+        burger.setAttribute('aria-expanded', String(isOpen));
+        menu.setAttribute('aria-hidden', String(!isOpen));
+        document.body.classList.toggle('menu-open', isOpen);
+    });
+
+    menu.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+            menu.classList.remove('is-open');
+            burger.classList.remove('is-open');
+            burger.setAttribute('aria-expanded', 'false');
+            menu.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('menu-open');
+        });
+    });
+}());
+</script>

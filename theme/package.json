@@ -1,0 +1,154 @@
+{
+    "name": "vaida",
+    "description": "Theme for Vaida is not dead e.V.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "keywords": ["ghost-theme"],
+    "author": {
+        "name": "Jonas",
+        "email": "jonasbauerwi@gmail.com"
+    },
+    "config": {
+        "posts_per_page": 25,
+        "card_assets": true,
+        "image_sizes": {
+            "xs": { "width": 100 },
+            "s": { "width": 300 },
+            "m": { "width": 600 },
+            "l": { "width": 1000 },
+            "xl": { "width": 2000 }
+        },
+        "custom": {
+            "hero_lead": {
+                "type": "text",
+                "default": "DIY-Konzerte, offene Sessions und Abende zwischen Techno, Punk und allem, was dazwischen lebt.",
+                "group": "Home page"
+            },
+            "hero_events_label": {
+                "type": "text",
+                "default": "Events ansehen",
+                "group": "Home page"
+            },
+            "hero_membership_label": {
+                "type": "text",
+                "default": "Mitglied werden",
+                "group": "Home page"
+            },
+            "location_tagline": {
+                "type": "text",
+                "default": "Viechtach · Bayerischer Wald",
+                "group": "Home page"
+            },
+            "home_upcoming_kicker": {
+                "type": "text",
+                "default": "Demnächst",
+                "group": "Home page"
+            },
+            "home_upcoming_title": {
+                "type": "text",
+                "default": "Was als Nächstes ansteht.",
+                "group": "Home page"
+            },
+            "home_aktuell_kicker": {
+                "type": "text",
+                "default": "Aktuelles",
+                "group": "Home page"
+            },
+            "home_recent_kicker": {
+                "type": "text",
+                "default": "Zuletzt",
+                "group": "Home page"
+            },
+            "ueber_uns_kicker": {
+                "type": "text",
+                "default": "Über uns",
+                "group": "Home page"
+            },
+            "home_recent_title": {
+                "type": "text",
+                "default": "Neuigkeiten aus dem Verein.",
+                "group": "Home page"
+            },
+            "events_description": {
+                "type": "text",
+                "default": "Wir machen Events rund um Punk, Techno und alternative Musik. Von rohen Live-Shows bis zu langen Clubnächten bringen wir laute, unabhängige Sounds und Szenen zusammen.",
+                "group": "Events"
+            },
+            "events_upcoming_kicker": {
+                "type": "text",
+                "default": "Kommende Events",
+                "group": "Events"
+            },
+            "events_upcoming_title": {
+                "type": "text",
+                "default": "Alles, was als Nächstes ansteht.",
+                "group": "Events"
+            },
+            "events_past_kicker": {
+                "type": "text",
+                "default": "Vergangene Events",
+                "group": "Events"
+            },
+            "events_past_title": {
+                "type": "text",
+                "default": "Was bereits gelaufen ist.",
+                "group": "Events"
+            },
+            "events_empty_text": {
+                "type": "text",
+                "default": "Aktuell stehen keine Events an.",
+                "group": "Events"
+            },
+            "galerie_title": {
+                "type": "text",
+                "default": "Motive, Flyer und erste öffentliche Eindrücke.",
+                "group": "Galerie"
+            },
+            "galerie_description": {
+                "type": "text",
+                "default": "Fotos, Artwork und Eindrücke vergangener Abende.",
+                "group": "Galerie"
+            },
+            "faq_title": {
+                "type": "text",
+                "default": "Häufig gestellte Fragen",
+                "group": "FAQ"
+            },
+            "nav_logo": {
+                "type": "text",
+                "default": "",
+                "group": "Kontakt"
+            },
+            "contact_email": {
+                "type": "text",
+                "default": "info@vaidaisnotdead.de",
+                "group": "Kontakt"
+            },
+            "mitglied_title": {
+                "type": "text",
+                "default": "Fördermitglied werden.",
+                "group": "Mitglied werden"
+            },
+            "mitglied_description": {
+                "type": "text",
+                "default": "Als Fördermitglied unterstützt du Vaida is not dead mit einem monatlichen Beitrag. Du hilfst dabei, Räume, Technik und Abende möglich zu machen – und kannst dich einbringen, so viel oder wenig du willst.",
+                "group": "Mitglied werden"
+            },
+            "foerder_lead": {
+                "type": "text",
+                "default": "Du trägst den Verein finanziell und schaffst damit die Basis für alles, was wir machen. Ob du bei Abenden und Organisation dabei bist oder nur im Hintergrund unterstützt – beides ist wertvoll.",
+                "group": "Mitglied werden"
+            },
+            "foerder_note": {
+                "type": "text",
+                "default": "Dein Beitrag macht möglich, was sonst nicht stattfinden würde.",
+                "group": "Mitglied werden"
+            },
+            "instagram_url": {
+                "type": "text",
+                "default": "https://www.instagram.com/vaidaisnotdead_ev/",
+                "group": "Kontakt"
+            }
+        }
+    }
+}

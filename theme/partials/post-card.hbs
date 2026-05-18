@@ -1,0 +1,14 @@
+<article class="card">
+    <a class="card-link" href="{{url}}">
+        {{#if feature_image}}
+        <div class="card-image">
+            <img src="{{img_url feature_image size="m"}}" alt="{{title}}" loading="lazy">
+        </div>
+        {{/if}}
+        <div class="card-body">
+            <p class="card-meta">{{date published_at format="D. MMMM YYYY"}}</p>
+            <h3 class="card-title">{{title}}</h3>
+            {{#if excerpt}}<p class="card-excerpt">{{excerpt}}</p>{{/if}}
+        </div>
+    </a>
+</article>

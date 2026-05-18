@@ -1,0 +1,35 @@
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>{{@site.title}}</h3>
+                <p>{{@site.description}}</p>
+            </div>
+            <div>
+                <p class="footer-heading">Folge uns</p>
+                <ul class="footer-links">
+                    {{#if @custom.instagram_url}}
+                        <li><a href="{{@custom.instagram_url}}" target="_blank" rel="noopener">Instagram</a></li>
+                    {{/if}}
+                    {{#if @site.facebook}}
+                        <li><a href="https://www.facebook.com/{{@site.facebook}}" target="_blank" rel="noopener">Facebook</a></li>
+                    {{/if}}
+                    {{#if @custom.contact_email}}
+                        <li><a href="mailto:{{@custom.contact_email}}">E-Mail</a></li>
+                    {{/if}}
+                </ul>
+            </div>
+            <div>
+                <p class="footer-heading">Rechtliches</p>
+                <ul class="footer-links">
+                    {{#foreach @site.secondary_navigation}}
+                        <li><a href="{{this.url}}">{{label}}</a></li>
+                    {{/foreach}}
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© {{date format="YYYY"}} {{@site.title}}</p>
+        </div>
+    </div>
+</footer>

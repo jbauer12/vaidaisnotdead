@@ -1,0 +1,33 @@
+{{!< default}}
+
+<article>
+    <div class="post-header container">
+        {{#if primary_tag}}
+            <p class="hero-kicker">{{primary_tag.name}}</p>
+        {{/if}}
+        <h1 class="post-title">{{title}}</h1>
+        <p class="post-meta">
+            {{date published_at format="D. MMMM YYYY"}}
+            {{#if primary_author}} · {{primary_author.name}}{{/if}}
+        </p>
+    </div>
+
+    {{#if feature_image}}
+    <div class="container">
+        <img class="post-feature-image" src="{{feature_image}}" alt="{{title}}">
+    </div>
+    {{/if}}
+
+    <div class="container">
+        <div class="post-content">
+            {{content}}
+            {{#if tags}}
+            <div class="post-tags">
+                {{#foreach tags}}
+                    <span class="tag-pill">{{name}}</span>
+                {{/foreach}}
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</article>

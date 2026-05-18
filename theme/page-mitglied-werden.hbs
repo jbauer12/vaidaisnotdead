@@ -1,0 +1,50 @@
+{{!< default}}
+
+<div class="container">
+    <div class="page-header">
+        <p class="section-kicker">Mitglied werden</p>
+        <h1 class="page-title">{{@custom.mitglied_title}}</h1>
+        <p class="page-desc">{{@custom.mitglied_description}}</p>
+        <div class="hero-actions" style="justify-content: flex-start; margin-top: 1.5rem;">
+            <a href="/kontakt/?grund=foerdermitgliedschaft" class="btn btn-primary">Mitglied werden</a>
+            <a href="mailto:{{@custom.contact_email}}" class="btn btn-secondary">Direkt mailen</a>
+        </div>
+    </div>
+
+    <section class="foerder-section">
+        <div class="foerder-card">
+            <div class="foerder-card-intro">
+                <p class="section-kicker">Fördermitgliedschaft</p>
+                <p class="foerder-lead">{{@custom.foerder_lead}}</p>
+            </div>
+            <div class="foerder-card-features">
+                <div class="mem-feature">
+                    <svg class="mem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 21h18M3 7v1m0 4v1M21 7v1m0 4v1M6 20v-5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5M9 3h6a2 2 0 0 1 2 2v2H7V5a2 2 0 0 1 2-2z"/>
+                    </svg>
+                    <span>Hilft dabei, Miete, Technik, Material und laufende Kosten stabiler zu tragen</span>
+                </div>
+                <div class="mem-feature">
+                    <svg class="mem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>
+                    <span>Du kannst dich aktiv einbringen – organisatorisch, bei Abenden oder in der Planung – wenn du es möchtest</span>
+                </div>
+                <div class="mem-feature">
+                    <svg class="mem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Du bist Teil einer Struktur, die DIY-Kultur im Bayerischen Wald am Leben hält</span>
+                </div>
+            </div>
+        </div>
+        <div class="foerder-cta">
+            <p class="foerder-note-display">{{@custom.foerder_note}}</p>
+            <a href="/kontakt/?grund=foerdermitgliedschaft" class="btn btn-primary btn-lg">Als Fördermitglied anfragen</a>
+        </div>
+    </section>
+
+</div>

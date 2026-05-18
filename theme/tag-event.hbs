@@ -1,0 +1,116 @@
+{{!< default}}
+
+{{! Pre-render post content server-side — JS reads from these, no API key needed }}
+{{#foreach posts}}
+<div id="post-content-{{id}}" hidden>{{content}}</div>
+{{/foreach}}
+
+<div class="container">
+    <div class="tag-header">
+        <p class="section-kicker">Events</p>
+        <h1 class="tag-title">Events</h1>
+        <p class="tag-desc">{{@custom.events_description}}</p>
+    </div>
+
+    {{! ── Upcoming ─────────────────────────────────────────────────────── }}
+    <section class="events-section" id="upcoming-section">
+        <div class="section-header">
+            <p class="section-kicker">{{@custom.events_upcoming_kicker}}</p>
+            <h2 class="section-title">{{@custom.events_upcoming_title}}</h2>
+        </div>
+
+        <div id="upcoming-events">
+            {{#if posts}}
+                {{#foreach posts}}
+                <article class="event-entry" id="event-{{id}}" data-post-id="{{id}}" data-event-date="{{date published_at format="YYYY-MM-DD"}}">
+
+                    <div class="event-entry-head">
+                        <div class="event-entry-badge">
+                            <span class="event-entry-day">{{date published_at format="DD"}}</span>
+                            <span class="event-entry-month">{{date published_at format="MMM"}}</span>
+                            <span class="event-entry-year">{{date published_at format="YYYY"}}</span>
+                        </div>
+                        <div class="event-entry-meta">
+                            <h2 class="event-entry-title">{{title}}</h2>
+                            {{#if custom_excerpt}}
+                            <div class="event-entry-strip" data-strip="{{custom_excerpt}}"></div>
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    <div class="event-entry-body">
+                        {{#if feature_image}}
+                        <div class="event-entry-image">
+                            <img src="{{img_url feature_image size="m"}}" alt="{{title}}" loading="lazy">
+                        </div>
+                        {{/if}}
+                        <div class="event-entry-content" id="content-{{id}}"></div>
+                    </div>
+
+                </article>
+                {{/foreach}}
+            {{/if}}
+        </div>
+
+        <div class="empty-state" id="upcoming-empty" style="display:none;">
+            <strong>{{@custom.events_empty_text}}</strong>
+            {{#if @site.facebook}}
+            <p>Schau auf unserer <a href="https://www.facebook.com/{{@site.facebook}}/" target="_blank" rel="noopener">Facebook-Seite</a> vorbei.</p>
+            {{/if}}
+        </div>
+    </section>
+
+    {{! ── Past ────────────────────────────────────────────────────────── }}
+    <section class="events-section" id="past-section" hidden>
+        <div class="section-header">
+            <p class="section-kicker">{{@custom.events_past_kicker}}</p>
+            <h2 class="section-title">{{@custom.events_past_title}}</h2>
+        </div>
+        <div id="past-events"></div>
+    </section>
+</div>
+
+<script>
+(function () {
+    // ── Sort upcoming / past ─────────────────────────────────────────────
+    var today    = new Date().toISOString().split('T')[0];
+    var entries  = Array.from(document.querySelectorAll('#upcoming-events .event-entry'));
+    var pastList = document.getElementById('past-events');
+    var pastSec  = document.getElementById('past-section');
+    var upEmpty  = document.getElementById('upcoming-empty');
+    var upList   = document.getElementById('upcoming-events');
+
+    // Render strip pills from pipe-separated text
+    document.querySelectorAll('.event-entry-strip[data-strip]').forEach(function (el) {
+        var parts = el.dataset.strip.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+        el.innerHTML = parts.map(function (p) {
+            return '<span class="event-entry-strip-text">' + p + '</span>';
+        }).join('');
+    });
+
+    entries.forEach(function (entry) {
+        if (entry.dataset.eventDate < today) {
+            entry.classList.add('event-entry--past');
+            // add vergangen tag
+            var meta = entry.querySelector('.event-entry-meta');
+            if (meta) {
+                var tag = document.createElement('span');
+                tag.className = 'event-past-tag';
+                tag.textContent = 'vergangen';
+                meta.appendChild(tag);
+            }
+            pastList.appendChild(entry);
+        }
+    });
+
+    if (!upList.querySelector('.event-entry:not(.event-entry--past)')) upEmpty.style.display = '';
+    if (pastList.querySelector('.event-entry')) pastSec.removeAttribute('hidden');
+
+    // ── Inject pre-rendered content from hidden server-side divs ────────
+    entries.forEach(function (entry) {
+        var source = document.getElementById('post-content-' + entry.dataset.postId);
+        var target = document.getElementById('content-' + entry.dataset.postId);
+        if (source && target) target.innerHTML = source.innerHTML;
+    });
+}());
+</script>

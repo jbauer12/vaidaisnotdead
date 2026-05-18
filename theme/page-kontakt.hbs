@@ -1,0 +1,140 @@
+{{!< default}}
+
+<div class="container">
+    <div class="page-header">
+        <p class="section-kicker">Kontakt</p>
+        <h1 class="page-title">Schreib uns.</h1>
+        <p class="page-desc">Egal ob Fördermitgliedschaft, Fragen, Kooperationen oder einfach Hallo – wir freuen uns über Nachrichten.</p>
+    </div>
+
+    <div class="kontakt-wrap">
+        <div class="kontakt-card">
+
+            <label class="foerder-toggle-wrap" for="foerder-toggle">
+                <input type="checkbox" class="foerder-toggle-inp" id="foerder-toggle">
+                <span class="foerder-toggle-track"></span>
+                <span class="foerder-toggle-label">Fördermitgliedschaft anfragen</span>
+            </label>
+
+            <form id="kontakt-form">
+                {{! Web3Forms access key }}
+                <input type="hidden" name="access_key" value="2a5f9e0f-bfac-4c79-bb73-165c621bfdef">
+                <input type="hidden" name="subject" id="k-subject">
+                <input type="hidden" name="from_name" id="k-from-name">
+                {{! Honeypot spam protection }}
+                <input type="checkbox" name="botcheck" style="display:none;">
+
+                <div class="form-grid">
+
+                    <div class="form-group betreff-group" id="betreff-group">
+                        <label class="form-label" for="k-betreff">Betreff <span class="req">*</span></label>
+                        <input class="form-input" type="text" id="k-betreff" name="betreff" placeholder="Worum geht es?">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="k-name">Name <span class="req">*</span></label>
+                            <input class="form-input" type="text" id="k-name" name="name" required placeholder="Dein Name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="k-email">E-Mail <span class="req">*</span></label>
+                            <input class="form-input" type="email" id="k-email" name="email" required placeholder="deine@mail.de">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="k-contact">Telefon / Signal / Insta</label>
+                        <input class="form-input" type="text" id="k-contact" name="kontakt" placeholder="Optional">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="k-message">Nachricht <span class="req">*</span></label>
+                        <textarea class="form-textarea" id="k-message" name="message" required placeholder=""></textarea>
+                    </div>
+
+                    <div class="kontakt-actions">
+                        <button type="submit" class="btn btn-primary btn-lg" id="k-submit">Nachricht senden</button>
+                        <p id="k-error" class="kontakt-error" style="display:none;"></p>
+                        <p class="kontakt-hint">Direkt an <a href="mailto:{{@custom.contact_email}}">{{@custom.contact_email}}</a> schreiben.</p>
+                    </div>
+
+                </div>
+            </form>
+
+            <div id="kontakt-success" class="kontakt-success" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <h3>Nachricht gesendet.</h3>
+                <p>Wir melden uns so schnell wie möglich.</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    var checkbox   = document.getElementById('foerder-toggle');
+    var betreffGrp = document.getElementById('betreff-group');
+    var betreffInp = document.getElementById('k-betreff');
+    var msgInp     = document.getElementById('k-message');
+    var form       = document.getElementById('kontakt-form');
+    var submitBtn  = document.getElementById('k-submit');
+    var errorEl    = document.getElementById('k-error');
+    var successEl  = document.getElementById('kontakt-success');
+
+    var placeholders = {
+        foerder: 'Erzähl kurz, was dich bewegt oder warum du den Verein unterstützen willst.',
+        other:   'Deine Nachricht …'
+    };
+
+    function apply() {
+        var isFoerder = checkbox.checked;
+        betreffGrp.classList.toggle('betreff-group--visible', !isFoerder);
+        betreffInp.required = !isFoerder;
+        msgInp.placeholder  = isFoerder ? placeholders.foerder : placeholders.other;
+    }
+
+    checkbox.addEventListener('change', apply);
+
+    var param = new URLSearchParams(window.location.search).get('grund');
+    if (param === 'foerdermitgliedschaft') checkbox.checked = true;
+    apply();
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var isFoerder = checkbox.checked;
+        var name = document.getElementById('k-name').value;
+
+        document.getElementById('k-from-name').value = name;
+        document.getElementById('k-subject').value   = isFoerder
+            ? 'Fördermitgliedschaft – ' + name
+            : (betreffInp.value ? betreffInp.value + ' – ' + name : 'Kontakt – ' + name);
+
+        submitBtn.disabled    = true;
+        submitBtn.textContent = 'Wird gesendet …';
+        errorEl.style.display = 'none';
+
+        fetch('https://api.web3forms.com/submit', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body:    JSON.stringify(Object.fromEntries(new FormData(form))),
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.success) {
+                form.style.display         = 'none';
+                document.querySelector('.foerder-toggle-wrap').style.display = 'none';
+                successEl.style.display    = 'flex';
+            } else {
+                throw new Error(data.message || 'Unbekannter Fehler');
+            }
+        })
+        .catch(function (err) {
+            errorEl.textContent    = 'Fehler: ' + err.message + ' – bitte direkt per Mail schreiben.';
+            errorEl.style.display  = '';
+            submitBtn.disabled     = false;
+            submitBtn.textContent  = 'Nachricht senden';
+        });
+    });
+}());
+</script>

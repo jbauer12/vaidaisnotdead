@@ -1,0 +1,25 @@
+routes:
+  /events/:
+    controller: channel
+    filter: tag:event
+    template: tag-event
+    order: published_at asc
+  /galerie/:
+    controller: channel
+    filter: tag:galerie
+    template: page-galerie
+  /faq/:
+    controller: channel
+    filter: tag:faq
+    template: page-faq
+    order: published_at asc
+
+collections:
+  /:
+    permalink: /{slug}/
+    template: index
+    filter: tag:-[galerie,faq]
+
+taxonomies:
+  tag: /tag/{slug}/
+  author: /author/{slug}/

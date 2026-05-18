@@ -1,0 +1,110 @@
+{{!< default}}
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-inner">
+            <div class="hero-text">
+                <p class="hero-kicker">{{@custom.location_tagline}}</p>
+                <h1 class="hero-title">{{@site.title}}</h1>
+                <p class="hero-lead">{{@custom.hero_lead}}</p>
+                <div class="hero-actions">
+                    <a href="/events/" class="btn btn-primary">{{@custom.hero_events_label}}</a>
+                    <a href="/mitglied-werden/" class="btn btn-secondary">{{@custom.hero_membership_label}}</a>
+                </div>
+            </div>
+            {{#if @site.cover_image}}
+            <div class="hero-poster">
+                <div class="poster-frame">
+                    <img src="{{@site.cover_image}}" alt="{{@site.title}}">
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</section>
+
+<div class="hero-divider"></div>
+
+{{#get "pages" filter="slug:ueber-uns" limit="1"}}
+{{#if pages}}
+{{#foreach pages}}
+<section class="section section--ueber-uns">
+    <div class="container">
+        <div class="split-grid split-grid--image-first">
+            {{#if feature_image}}
+            <div class="split-media">
+                <img src="{{feature_image}}" alt="{{@site.title}}" class="split-img split-img--tall">
+            </div>
+            {{/if}}
+            <div class="split-text ueber-uns-text">
+                {{content}}
+            </div>
+        </div>
+    </div>
+</section>
+{{/foreach}}
+{{/if}}
+{{/get}}
+
+{{#get "posts" filter="tag:event" limit="8" order="published_at asc"}}
+{{#if posts}}
+<section class="section section--home-events" id="home-events-section">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-kicker">{{@custom.home_aktuell_kicker}}</p>
+            <h2 class="section-title">{{@custom.home_upcoming_title}}</h2>
+        </div>
+        <div class="event-home-list" id="home-event-list">
+            {{#foreach posts}}
+            <a class="event-home-card" href="/events/" data-event-date="{{date published_at format="YYYY-MM-DD"}}">
+                <div class="event-home-badge">
+                    <span class="event-home-day">{{date published_at format="DD"}}</span>
+                    <span class="event-home-month">{{date published_at format="MMM"}}</span>
+                </div>
+                <div class="event-home-body">
+                    <h3 class="event-home-title">{{title}}</h3>
+                    {{#if custom_excerpt}}
+                    <p class="event-home-strip">{{custom_excerpt}}</p>
+                    {{/if}}
+                </div>
+                {{#if feature_image}}
+                <div class="event-home-thumb">
+                    <img src="{{img_url feature_image size="xs"}}" alt="{{title}}" loading="lazy">
+                </div>
+                {{/if}}
+                <span class="event-home-arrow">→</span>
+            </a>
+            {{/foreach}}
+        </div>
+        <div class="event-home-empty" id="home-events-empty" style="display:none;">
+            <p>Aktuell stehen keine Events an. <a href="/events/">Alle Events ansehen →</a></p>
+        </div>
+        <a href="/events/" class="see-all" id="home-events-link">Alle Events ansehen →</a>
+    </div>
+</section>
+{{/if}}
+{{/get}}
+
+<script>
+(function () {
+    var today = new Date().toISOString().split('T')[0];
+    var list  = document.getElementById('home-event-list');
+    var empty = document.getElementById('home-events-empty');
+    var link  = document.getElementById('home-events-link');
+    if (!list) return;
+    var cards = Array.from(list.querySelectorAll('.event-home-card'));
+    var shown = 0;
+    cards.forEach(function (card) {
+        if (card.dataset.eventDate < today || shown >= 3) {
+            card.style.display = 'none';
+        } else {
+            shown++;
+        }
+    });
+    if (shown === 0) {
+        list.style.display  = 'none';
+        if (link)  link.style.display  = 'none';
+        if (empty) empty.style.display = '';
+    }
+}());
+</script>

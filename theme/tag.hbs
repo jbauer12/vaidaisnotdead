@@ -1,0 +1,36 @@
+{{!< default}}
+
+<div class="container">
+    <div class="tag-header">
+        <p class="section-kicker">Archiv</p>
+        <h1 class="tag-title">{{tag.name}}</h1>
+        {{#if tag.description}}
+            <p class="tag-desc">{{tag.description}}</p>
+        {{/if}}
+    </div>
+
+    {{#if posts}}
+    <div class="card-grid" style="padding-bottom: 4rem;">
+        {{#foreach posts}}
+            <article class="card">
+                <a class="card-link" href="{{url}}">
+                    {{#if feature_image}}
+                    <div class="card-image">
+                        <img src="{{feature_image}}" alt="{{title}}" loading="lazy">
+                    </div>
+                    {{/if}}
+                    <div class="card-body">
+                        <p class="card-meta">{{date published_at format="D. MMMM YYYY"}}</p>
+                        <h3 class="card-title">{{title}}</h3>
+                        {{#if excerpt}}<p class="card-excerpt">{{excerpt}}</p>{{/if}}
+                    </div>
+                </a>
+            </article>
+        {{/foreach}}
+    </div>
+    {{else}}
+    <div class="empty-state" style="margin-bottom: 4rem;">
+        <strong>Keine Einträge gefunden.</strong>
+    </div>
+    {{/if}}
+</div>

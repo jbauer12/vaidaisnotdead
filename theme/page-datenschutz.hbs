@@ -1,0 +1,16 @@
+{{!< default}}
+
+<div class="container">
+    <div class="tag-header">
+        <p class="section-kicker">Rechtliches</p>
+        <h1 class="tag-title">Datenschutzerklärung</h1>
+    </div>
+
+    <div class="page-content">
+        {{#get "pages" filter="slug:datenschutz" limit="1"}}
+        {{#foreach pages}}
+        {{content}}
+        {{/foreach}}
+        {{/get}}
+    </div>
+</div>

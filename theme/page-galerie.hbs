@@ -1,0 +1,218 @@
+{{!< default}}
+
+{{#if posts}}
+
+{{! Pre-render image data for each album — parsed by JS }}
+{{#foreach posts}}
+<div id="album-data-{{id}}" class="album-data" hidden>
+    {{#if feature_image}}<img src="{{feature_image}}" alt="{{title}}">{{/if}}
+    {{content}}
+</div>
+{{/foreach}}
+
+<div class="container gallery-page">
+
+    {{! ── Headline ───────────────────────────────────────────────────── }}
+    <div class="tag-header">
+        <p class="section-kicker">Galerie</p>
+        <h1 class="tag-title">{{@custom.galerie_title}}</h1>
+        <p class="tag-desc">{{@custom.galerie_description}}</p>
+    </div>
+
+    <div class="section-header" style="margin-top: 0.5rem;">
+        <h2 class="section-title">Fotos Abende</h2>
+    </div>
+
+    <div class="gallery-albums-grid" id="gallery-albums">
+        {{#foreach posts}}
+        <button class="gallery-album-card{{#if @first}} gallery-album-card--active{{/if}}"
+                data-album="{{id}}"
+                data-title="{{title}}"
+                type="button">
+            {{#if feature_image}}
+            <div class="gallery-album-card-img">
+                <img src="{{img_url feature_image size="m"}}" alt="{{title}}" loading="lazy">
+            </div>
+            {{/if}}
+            <div class="gallery-album-card-body">
+                <p class="gallery-album-card-date">{{date published_at format="D. MMM YYYY"}}</p>
+                <h3 class="gallery-album-card-title">{{title}}</h3>
+                {{#if custom_excerpt}}
+                <p class="gallery-album-card-desc">{{custom_excerpt}}</p>
+                {{/if}}
+                <span class="gallery-album-card-count" id="album-count-{{id}}"></span>
+            </div>
+        </button>
+        {{/foreach}}
+    </div>
+
+    {{! ── Stage ─────────────────────────────────────────────────────── }}
+    <div class="gallery-stage-section">
+        <div class="gallery-stage-header">
+            <span class="gallery-stage-title" id="gs-title"></span>
+            <span class="gallery-stage-counter" id="gs-counter"></span>
+        </div>
+
+        <div class="gallery-stage" id="gallery-stage">
+            <img class="gallery-stage-img" id="gs-img" src="" alt="">
+            <button class="gallery-stage-nav gallery-stage-nav--prev" id="gs-prev" aria-label="Zurück">&#8592;</button>
+            <button class="gallery-stage-nav gallery-stage-nav--next" id="gs-next" aria-label="Weiter">&#8594;</button>
+        </div>
+
+        <div class="gallery-thumbs-row" id="gallery-thumbs"></div>
+    </div>
+
+</div>
+
+{{else}}
+<div class="container gallery-page">
+    <p class="section-kicker">{{@custom.galerie_title}}</p>
+    <div class="empty-state" style="margin-top:2rem;">
+        <strong>Noch keine Galerie-Einträge.</strong>
+        <p>Erstelle Beiträge mit dem Tag <code>galerie</code>.</p>
+    </div>
+</div>
+{{/if}}
+
+{{! Fullscreen lightbox }}
+<div class="lb-overlay" id="lb-overlay">
+    <img class="lb-img" id="lb-img" src="" alt="">
+    <button class="lb-nav lb-prev" id="lb-prev" aria-label="Zurück">&#8592;</button>
+    <button class="lb-nav lb-next" id="lb-next" aria-label="Weiter">&#8594;</button>
+    <button class="lb-close" id="lb-close" aria-label="Schließen">&#x2715;</button>
+    <span class="lb-counter" id="lb-counter"></span>
+</div>
+
+<script>
+(function () {
+    var albumCards = document.querySelectorAll('.gallery-album-card');
+    var stageImg   = document.getElementById('gs-img');
+    var thumbsRow  = document.getElementById('gallery-thumbs');
+    var titleEl    = document.getElementById('gs-title');
+    var counterEl  = document.getElementById('gs-counter');
+    var prevBtn    = document.getElementById('gs-prev');
+    var nextBtn    = document.getElementById('gs-next');
+    var lbOverlay  = document.getElementById('lb-overlay');
+    var lbImg      = document.getElementById('lb-img');
+    var lbPrev     = document.getElementById('lb-prev');
+    var lbNext     = document.getElementById('lb-next');
+    var lbClose    = document.getElementById('lb-close');
+    var lbCounter  = document.getElementById('lb-counter');
+
+    var images  = [];
+    var current = 0;
+
+    function getImages(albumId) {
+        var el = document.getElementById('album-data-' + albumId);
+        if (!el) return [];
+        return Array.from(el.querySelectorAll('img')).map(function (img) {
+            return { src: img.src, alt: img.alt || '' };
+        });
+    }
+
+    function wrap(i) { return (i + images.length) % images.length; }
+
+    function showImage(i) {
+        current = wrap(i);
+        stageImg.src = images[current].src;
+        stageImg.alt = images[current].alt;
+        counterEl.textContent = (current + 1) + ' / ' + images.length;
+        thumbsRow.querySelectorAll('.gallery-thumb-btn').forEach(function (t, idx) {
+            t.classList.toggle('gallery-thumb-btn--active', idx === current);
+        });
+        var active = thumbsRow.querySelector('.gallery-thumb-btn--active');
+        if (active) active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
+    function buildThumbs() {
+        thumbsRow.innerHTML = '';
+        images.forEach(function (img, i) {
+            var btn = document.createElement('button');
+            btn.className = 'gallery-thumb-btn' + (i === 0 ? ' gallery-thumb-btn--active' : '');
+            btn.type = 'button';
+            var el = document.createElement('img');
+            el.src = img.src;
+            el.alt = img.alt;
+            el.loading = 'lazy';
+            btn.appendChild(el);
+            btn.addEventListener('click', function () { showImage(i); });
+            thumbsRow.appendChild(btn);
+        });
+    }
+
+    function loadAlbum(card) {
+        albumCards.forEach(function (c) { c.classList.remove('gallery-album-card--active'); });
+        card.classList.add('gallery-album-card--active');
+
+        var albumId = card.dataset.album;
+        images  = getImages(albumId);
+        current = 0;
+        titleEl.textContent = card.dataset.title || '';
+
+        // update image count on the card
+        var countEl = document.getElementById('album-count-' + albumId);
+        if (countEl) countEl.textContent = images.length + (images.length === 1 ? ' Bild' : ' Bilder');
+
+        buildThumbs();
+        if (images.length) {
+            showImage(0);
+            document.getElementById('gallery-stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            stageImg.src = '';
+            counterEl.textContent = '';
+        }
+    }
+
+    prevBtn.addEventListener('click', function () { showImage(current - 1); });
+    nextBtn.addEventListener('click', function () { showImage(current + 1); });
+
+    stageImg.addEventListener('click', function () {
+        if (!images.length) return;
+        lbImg.src = images[current].src;
+        lbImg.alt = images[current].alt;
+        lbCounter.textContent = (current + 1) + ' / ' + images.length;
+        lbOverlay.classList.add('lb-overlay--open');
+    });
+
+    function lbShow(i) {
+        current = wrap(i);
+        lbImg.src = images[current].src;
+        lbImg.alt = images[current].alt;
+        lbCounter.textContent = (current + 1) + ' / ' + images.length;
+        showImage(current);
+    }
+
+    function closeLb() { lbOverlay.classList.remove('lb-overlay--open'); }
+
+    lbClose.addEventListener('click', closeLb);
+    lbOverlay.addEventListener('click', function (e) { if (e.target === lbOverlay) closeLb(); });
+    lbPrev.addEventListener('click', function (e) { e.stopPropagation(); lbShow(current - 1); });
+    lbNext.addEventListener('click', function (e) { e.stopPropagation(); lbShow(current + 1); });
+
+    document.addEventListener('keydown', function (e) {
+        var open = lbOverlay.classList.contains('lb-overlay--open');
+        if (open) {
+            if (e.key === 'ArrowLeft')  { e.preventDefault(); lbShow(current - 1); }
+            if (e.key === 'ArrowRight') { e.preventDefault(); lbShow(current + 1); }
+            if (e.key === 'Escape')     closeLb();
+        } else {
+            if (e.key === 'ArrowLeft')  { e.preventDefault(); showImage(current - 1); }
+            if (e.key === 'ArrowRight') { e.preventDefault(); showImage(current + 1); }
+        }
+    });
+
+    albumCards.forEach(function (card) {
+        card.addEventListener('click', function () { loadAlbum(card); });
+    });
+
+    // init: populate counts for all albums, load first
+    albumCards.forEach(function (card) {
+        var imgs = getImages(card.dataset.album);
+        var countEl = document.getElementById('album-count-' + card.dataset.album);
+        if (countEl && imgs.length) countEl.textContent = imgs.length + (imgs.length === 1 ? ' Bild' : ' Bilder');
+    });
+
+    var first = document.querySelector('.gallery-album-card');
+    if (first) loadAlbum(first);
+}());
+</script>
