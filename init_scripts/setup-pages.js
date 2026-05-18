@@ -6,15 +6,13 @@
 //
 // Pages are matched by slug. Existing pages are updated, missing ones created.
 
+import 'dotenv/config';
 import { createHmac } from 'crypto';
 
 const LOCAL = process.argv.includes('--local');
 
-const PROD_API_KEY  = '6a04d59d57036b043cc8b2b4:df32e42452cb18b04b1d52da2b6de0af0ce3ec693940087392d168a70269d89b';
-const LOCAL_API_KEY = '6a03a59a399cb20001a9ea6c:811be8b65972aa07d6bc139d5bbc5f67d4d971e837abfbfa8cd0fb653e636659';
-
-const ADMIN_API_KEY = LOCAL ? LOCAL_API_KEY : PROD_API_KEY;
-const GHOST_URL     = LOCAL ? 'http://localhost:2368' : 'https://vaidaisnotdead.de';
+const ADMIN_API_KEY = LOCAL ? process.env.GHOST_LOCAL_ADMIN_API_KEY : process.env.GHOST_ADMIN_API_KEY;
+const GHOST_URL     = LOCAL ? process.env.GHOST_LOCAL_URL : process.env.GHOST_URL;
 
 // ╔══════════════════════════════════════════════════════════════════════╗
 // ║  PAGES                                                               ║

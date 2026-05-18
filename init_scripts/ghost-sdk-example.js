@@ -5,12 +5,15 @@
 //
 // NOTE: Events are managed separately in events.js / facebook-events.js
 
+import 'dotenv/config';
 import GhostAdminAPI from '@tryghost/admin-api';
 import { createHmac } from 'crypto';
 import { readFileSync, existsSync } from 'fs';
 
-const ADMIN_API_KEY = '6a04d59d57036b043cc8b2b4:df32e42452cb18b04b1d52da2b6de0af0ce3ec693940087392d168a70269d89b';
-const GHOST_URL     = 'https://vaidaisnotdead.de';
+const LOCAL = process.argv.includes('--local');
+
+const ADMIN_API_KEY = LOCAL ? process.env.GHOST_LOCAL_ADMIN_API_KEY : process.env.GHOST_ADMIN_API_KEY;
+const GHOST_URL     = LOCAL ? process.env.GHOST_LOCAL_URL : process.env.GHOST_URL;
 
 const api = new GhostAdminAPI({ url: GHOST_URL, key: ADMIN_API_KEY, version: 'v5.0' });
 
