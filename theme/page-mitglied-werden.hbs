@@ -5,10 +5,6 @@
         <p class="section-kicker">Mitglied werden</p>
         <h1 class="page-title">{{@custom.mitglied_title}}</h1>
         <p class="page-desc">{{@custom.mitglied_description}}</p>
-        <div class="hero-actions" style="justify-content: flex-start; margin-top: 1.5rem;">
-            <a href="{{asset 'pdf/beitrittsantrag.pdf'}}" class="btn btn-primary" download>Beitrittserklärung herunterladen</a>
-            <a href="mailto:{{@custom.contact_email}}" class="btn btn-secondary">Direkt mailen</a>
-        </div>
     </div>
 
     <section class="foerder-section">
@@ -45,28 +41,321 @@
                 </div>
             </div>
         </div>
+
         <div class="foerder-cta">
             <p class="foerder-note-display">Dein Beitrag macht möglich, was sonst nicht stattfinden würde.</p>
-            <div class="pdf-card">
-                <svg class="pdf-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <polyline points="10 9 9 9 8 9"/>
-                </svg>
-                <div class="pdf-card-body">
-                    <p class="pdf-card-title">Beitrittserklärung</p>
-                    <ol class="pdf-card-steps">
-                        <li>PDF herunterladen &amp; ausdrucken</li>
-                        <li>Ausfüllen &amp; unterschreiben</li>
-                        <li>Ausgefüllte PDF als E-Mail senden an <a href="mailto:{{@custom.contact_email}}">{{@custom.contact_email}}</a></li>
-                        <li><span>Du schaffst es nicht mit E-Mail und PDF? Schreib uns eine Nachricht über das <a href="/kontakt/">Kontaktformular</a></span></li>
-                    </ol>
-                    <a href="{{asset 'pdf/beitrittsantrag.pdf'}}" class="btn btn-primary" download>PDF herunterladen</a>
-                </div>
-            </div>
+            <button class="btn btn-primary btn-lg" id="mitglied-open-modal">Jetzt Mitglied werden</button>
         </div>
     </section>
-
 </div>
+
+{{! Modal }}
+<div id="mitglied-modal" class="mitglied-modal" aria-modal="true" role="dialog" aria-label="Mitglied werden" hidden>
+    <div class="mitglied-modal-backdrop"></div>
+    <div class="mitglied-modal-box">
+        <button class="mitglied-modal-close" id="mitglied-close-modal" aria-label="Schließen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <p class="section-kicker">Beitrittsantrag</p>
+        <h2 class="mitglied-modal-title">Mitglied werden.</h2>
+        <p class="mitglied-modal-desc">Füll das Formular aus – wir kümmern uns um den Rest.</p>
+
+        <form id="mitglied-form" class="form-grid" novalidate>
+            <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off">
+
+            {{! === Persönliche Angaben === }}
+            <div class="mitglied-form-section">Persönliche Angaben</div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-name">Vollständiger Name <span class="req">*</span></label>
+                <input class="form-input" type="text" id="m-name" name="name" required autocomplete="name" placeholder="Vorname Nachname">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-strasse">Straße und Hausnummer <span class="req">*</span></label>
+                <input class="form-input" type="text" id="m-strasse" name="strasse" required autocomplete="street-address" placeholder="Musterstraße 12">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="m-plz">PLZ <span class="req">*</span></label>
+                    <input class="form-input" type="text" id="m-plz" name="plz" required autocomplete="postal-code" placeholder="94234" inputmode="numeric" maxlength="10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="m-ort">Ort <span class="req">*</span></label>
+                    <input class="form-input" type="text" id="m-ort" name="ort" required autocomplete="address-level2" placeholder="Viechtach">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-geburtstag">Geburtsdatum <span class="req">*</span></label>
+                <input class="form-input" type="date" id="m-geburtstag" name="geburtstag" required>
+                <p class="form-field-hint">Minderjährige benötigen die schriftliche Zustimmung eines Erziehungsberechtigten.</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-email">E-Mail <span class="req">*</span></label>
+                <input class="form-input" type="email" id="m-email" name="email" required autocomplete="email" placeholder="deine@mail.de">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-telefon">Handynummer</label>
+                <input class="form-input" type="tel" id="m-telefon" name="telefon" autocomplete="tel" placeholder="+49 …">
+            </div>
+
+            {{! === Newsletter === }}
+            <div class="mitglied-form-section">Newsletter</div>
+
+            <div class="form-group">
+                <label class="form-label">Möchtest du per Mail über Aktuelles &amp; Veranstaltungen informiert werden?</label>
+                <div class="form-radio-group">
+                    <label class="form-radio">
+                        <input type="radio" name="newsletter" value="nein" checked>
+                        <span>Nein danke, ich bekomme schon genug Newsletter.</span>
+                    </label>
+                    <label class="form-radio">
+                        <input type="radio" name="newsletter" value="ja">
+                        <span>Ja gerne, haltet mich auf dem Laufenden!</span>
+                    </label>
+                </div>
+            </div>
+
+            {{! === Mitteilung === }}
+            <div class="mitglied-form-section">Mitteilung <span class="form-section-optional">(optional)</span></div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-nachricht">Anmerkungen, Kritik, Lob oder Wünsche</label>
+                <textarea class="form-textarea" id="m-nachricht" name="nachricht" placeholder=""></textarea>
+            </div>
+
+            {{! === Mitgliedsbeitrag === }}
+            <div class="mitglied-form-section">Mitgliedsbeitrag <span class="req">*</span></div>
+
+            <div class="form-group">
+                <div class="form-radio-group">
+                    <label class="form-radio form-radio--card">
+                        <input type="radio" name="beitrag" value="jaehrlich_50" checked>
+                        <span>
+                            <strong>Jährlich — 50 €</strong>
+                            <small>Ich stimme der jährlich wiederkehrenden Abbuchung von 50 € zu.</small>
+                        </span>
+                    </label>
+                    <label class="form-radio form-radio--card">
+                        <input type="radio" name="beitrag" value="monatlich_5">
+                        <span>
+                            <strong>Monatlich — 5 €</strong>
+                            <small>Ich stimme der monatlich wiederkehrenden Abbuchung von 5 € zu.</small>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            {{! === SEPA === }}
+            <div class="mitglied-form-section">SEPA-Lastschriftmandat <span class="req">*</span></div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-kontoinhaber">Kontoinhaber (Name / Vorname) <span class="req">*</span></label>
+                <input class="form-input" type="text" id="m-kontoinhaber" name="kontoinhaber" required autocomplete="name" placeholder="Vorname Nachname">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-iban">IBAN <span class="req">*</span></label>
+                <input class="form-input" type="text" id="m-iban" name="iban" required autocomplete="off" placeholder="DE00 0000 0000 0000 0000 00" inputmode="text" spellcheck="false" maxlength="34">
+                <p id="m-iban-error" class="form-field-hint form-field-hint--error" style="display:none;">Bitte eine gültige IBAN eingeben.</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-bic">BIC</label>
+                <input class="form-input" type="text" id="m-bic" name="bic" autocomplete="off" placeholder="z. B. BYLADEM1RGN" spellcheck="false">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="m-bank">Name der Bank / des Kreditinstituts <span class="req">*</span></label>
+                <input class="form-input" type="text" id="m-bank" name="bank" required placeholder="z. B. Sparkasse Regen-Viechtach">
+            </div>
+
+            <div class="sepa-mandate-box">
+                <p class="sepa-mandate-title">SEPA-Lastschriftmandat</p>
+                <p>Ich ermächtige den Verein Vaida is not dead e.V., Zahlungen von meinem Konto mittels Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die auf mein Konto gezogenen Lastschriften einzulösen.</p>
+                <p>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen.</p>
+            </div>
+
+            <label class="form-check" id="m-sepa-wrap">
+                <input type="checkbox" id="m-sepa" name="sepa_mandat" required>
+                <span>Ich erteile hiermit das oben genannte SEPA-Lastschriftmandat. <span class="req">*</span></span>
+            </label>
+
+            {{! === Einverständnisse === }}
+            <div class="mitglied-form-section">Einverständnisse</div>
+
+            <label class="form-check" id="m-satzung-wrap">
+                <input type="checkbox" id="m-satzung" name="satzung" required>
+                <span>Ich erkenne die <a href="{{asset 'satzung.pdf'}}" target="_blank" download onclick="event.stopPropagation()">Satzung</a> des Vereins Vaida is not dead e.V. an und beantrage die Mitgliedschaft. <span class="req">*</span></span>
+            </label>
+
+            <label class="form-check" id="m-dsgvo-wrap">
+                <input type="checkbox" id="m-dsgvo" name="dsgvo" required>
+                <span>Ich habe die <a href="/datenschutz/" target="_blank" onclick="event.stopPropagation()">Datenschutzerklärung</a> gelesen und nehme zur Kenntnis, dass meine Angaben zur Verwaltung meiner Vereinsmitgliedschaft verarbeitet werden (Art. 6 Abs. 1 lit. b DSGVO). <span class="req">*</span></span>
+            </label>
+
+            <div class="kontakt-actions">
+                <button type="submit" class="btn btn-primary btn-lg" id="m-submit">Antrag absenden</button>
+                <p id="m-error" class="kontakt-error" style="display:none;"></p>
+            </div>
+        </form>
+
+        <div id="mitglied-success" class="kontakt-success" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <h3>Antrag eingegangen!</h3>
+            <p>Du erhältst in Kürze eine Bestätigung per E-Mail. Falls du innerhalb von 48 Stunden nichts erhalten hast, melde dich direkt bei uns.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    var ENDPOINT  = 'https://script.google.com/macros/s/AKfycbw0OMHRDra9t-I4-RyUDmeTHUUo0grm9wZvBh5B1nTQ7fKjXg7fKnNwQwtDKjSFWSiHoA/exec';
+    var modal     = document.getElementById('mitglied-modal');
+    var openBtn   = document.getElementById('mitglied-open-modal');
+    var closeBtn  = document.getElementById('mitglied-close-modal');
+    var form      = document.getElementById('mitglied-form');
+    var submitBtn = document.getElementById('m-submit');
+    var errorEl   = document.getElementById('m-error');
+    var successEl = document.getElementById('mitglied-success');
+
+    // ── Modal open/close ────────────────────────────────
+    function openModal() {
+        modal.hidden = false;
+        document.body.classList.add('modal-open');
+        closeBtn.focus();
+    }
+    function closeModal() {
+        modal.hidden = true;
+        document.body.classList.remove('modal-open');
+        openBtn.focus();
+    }
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    modal.querySelector('.mitglied-modal-backdrop').addEventListener('click', closeModal);
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+    });
+
+    // ── IBAN auto-format ────────────────────────────────
+    var ibanInput = document.getElementById('m-iban');
+    ibanInput.addEventListener('input', function () {
+        var pos   = this.selectionStart;
+        var raw   = this.value.replace(/\s+/g, '').toUpperCase().slice(0, 22);
+        var parts = raw.match(/.{1,4}/g);
+        this.value = parts ? parts.join(' ') : raw;
+    });
+
+    function validateIBAN(raw) {
+        var iban = raw.replace(/\s+/g, '').toUpperCase();
+        return /^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/.test(iban) && iban.length >= 15;
+    }
+
+    // ── Validation helpers ──────────────────────────────
+    function setError(el) {
+        el.classList.add('form-input--error');
+        var hint = el.parentNode.querySelector('.form-field-hint:not(.form-field-hint--error)');
+        var err  = el.parentNode.querySelector('.form-field-hint--error[data-inline]');
+        if (!err) {
+            err = document.createElement('p');
+            err.className = 'form-field-hint form-field-hint--error';
+            err.setAttribute('data-inline', '1');
+            el.parentNode.appendChild(err);
+        }
+        err.textContent = 'Bitte ausfüllen.';
+        err.style.display = '';
+    }
+    function clearError(el) {
+        el.classList.remove('form-input--error');
+        var err = el.parentNode.querySelector('.form-field-hint--error[data-inline]');
+        if (err) err.style.display = 'none';
+    }
+    function val(id) {
+        return document.getElementById(id).value.trim();
+    }
+
+    // ── Submit ──────────────────────────────────────────
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (form.botcheck.checked) return;
+
+        var ok = true;
+        errorEl.style.display = 'none';
+
+        // Required text fields
+        var reqIds = ['m-name', 'm-strasse', 'm-plz', 'm-ort', 'm-geburtstag', 'm-email', 'm-kontoinhaber', 'm-bank'];
+        reqIds.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el.value.trim()) { setError(el); ok = false; } else { clearError(el); }
+        });
+
+        // IBAN
+        var ibanEl  = document.getElementById('m-iban');
+        var ibanErr = document.getElementById('m-iban-error');
+        if (!validateIBAN(ibanEl.value)) {
+            setError(ibanEl);
+            ibanErr.style.display = '';
+            ok = false;
+        } else {
+            clearError(ibanEl);
+            ibanErr.style.display = 'none';
+        }
+
+        // Checkboxes
+        ['m-sepa', 'm-satzung', 'm-dsgvo'].forEach(function (id) {
+            var el   = document.getElementById(id);
+            var wrap = document.getElementById(id + '-wrap');
+            if (!el.checked) { wrap.classList.add('form-check--error'); ok = false; }
+            else             { wrap.classList.remove('form-check--error'); }
+        });
+
+        if (!ok) {
+            errorEl.textContent   = 'Bitte alle Pflichtfelder ausfüllen und den Bedingungen zustimmen.';
+            errorEl.style.display = '';
+            return;
+        }
+
+        submitBtn.disabled    = true;
+        submitBtn.textContent = 'Wird gesendet …';
+
+        var newsletter = form.querySelector('input[name="newsletter"]:checked');
+        var beitrag    = form.querySelector('input[name="beitrag"]:checked');
+
+        fetch(ENDPOINT, {
+            method: 'POST',
+            mode:   'no-cors',
+            body:   JSON.stringify({
+                name:         val('m-name'),
+                strasse:      val('m-strasse'),
+                plz:          val('m-plz'),
+                ort:          val('m-ort'),
+                geburtstag:   val('m-geburtstag'),
+                email:        val('m-email'),
+                telefon:      val('m-telefon'),
+                newsletter:   newsletter ? newsletter.value : 'nein',
+                beitrag:      beitrag    ? beitrag.value    : '',
+                kontoinhaber: val('m-kontoinhaber'),
+                iban:         ibanEl.value.replace(/\s+/g, '').toUpperCase(),
+                bic:          val('m-bic'),
+                bank:         val('m-bank'),
+                nachricht:    val('m-nachricht'),
+            }),
+        })
+        .then(function () {
+            form.style.display      = 'none';
+            successEl.style.display = 'flex';
+        })
+        .catch(function () {
+            errorEl.textContent   = 'Fehler beim Senden – bitte direkt per Mail schreiben.';
+            errorEl.style.display = '';
+            submitBtn.disabled    = false;
+            submitBtn.textContent = 'Antrag absenden';
+        });
+    });
+}());
+</script>

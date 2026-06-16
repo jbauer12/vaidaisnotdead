@@ -1068,7 +1068,7 @@ body.menu-open { overflow: hidden; }
 
 .page-desc { font-size: 1.1rem; color: var(--text-secondary); max-width: 44rem; }
 
-.page-content { max-width: 46rem; padding-bottom: 4rem; }
+.page-content { max-width: 54rem; padding-bottom: 4rem; margin: 0 auto; text-align: center; }
 .page-content h2 { margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.5rem; }
 .page-content h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.2rem; }
 .page-content p { margin-bottom: 1.25rem; color: var(--text-secondary); }
@@ -1216,7 +1216,156 @@ body.menu-open { overflow: hidden; }
 .form-section > p:not(.section-kicker) { color: var(--text-secondary); margin-bottom: 1.5rem; }
 
 /* === Mitglied werden === */
-.foerder-section { padding: 3rem 0 2rem; }
+.foerder-section { padding: 3rem 0 4rem; }
+
+/* === Mitglied Modal === */
+.mitglied-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.mitglied-modal[hidden] { display: none; }
+
+.mitglied-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 26, 18, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.mitglied-modal-box {
+  position: relative;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 44rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.mitglied-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.mitglied-modal-close:hover { color: var(--text); }
+.mitglied-modal-close svg { width: 1.25rem; height: 1.25rem; display: block; }
+
+.mitglied-modal-title {
+  font-size: 1.75rem;
+  letter-spacing: -0.03em;
+  margin: 0.5rem 0 0.5rem;
+}
+.mitglied-modal-desc {
+  color: var(--text-secondary);
+  margin-bottom: 1.75rem;
+  line-height: 1.6;
+}
+
+body.modal-open { overflow: hidden; }
+
+.mitglied-form-section {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+.form-section-optional { color: var(--text-muted); font-size: 0.6rem; }
+
+.form-field-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+  line-height: 1.5;
+}
+.form-field-hint--error { color: #c0392b; }
+
+.form-input--error {
+  border-color: #c0392b !important;
+}
+
+.form-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+.form-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.form-radio input[type="radio"] { flex-shrink: 0; margin-top: 0.2rem; accent-color: var(--accent); }
+.form-radio--card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.15s;
+}
+.form-radio--card:has(input:checked) { border-color: var(--accent); background: rgba(54,95,82,0.05); }
+.form-radio--card strong { display: block; color: var(--text); font-size: 0.95rem; }
+.form-radio--card small { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem; display: block; }
+
+.sepa-mandate-box {
+  background: rgba(32,40,28,0.04);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-warm);
+  border-radius: 0 0.6rem 0.6rem 0;
+  padding: 1rem 1.1rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.sepa-mandate-box p + p { margin-top: 0.65rem; }
+.sepa-mandate-title {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-warm);
+  margin-bottom: 0.6rem;
+}
+
+.form-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  transition: border-color 0.15s;
+}
+.form-check input[type="checkbox"] { flex-shrink: 0; margin-top: 0.2rem; accent-color: var(--accent); }
+.form-check--error { border-color: #c0392b; background: rgba(192,57,43,0.04); }
 
 .foerder-cta {
   text-align: center;
@@ -1874,8 +2023,23 @@ details[open] .faq-question::after { transform: rotate(45deg); }
 }
 
 /* === Über Uns === */
+.ueber-uns-feature-img {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto 3rem;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  aspect-ratio: 1/1;
+}
+
+.page-header--ueber-uns {
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 3rem;
+}
+
 .mitglieder-section {
-  padding: 3rem 0 4rem;
+  padding: 0 0 3rem;
 }
 
 .mitglieder-header {

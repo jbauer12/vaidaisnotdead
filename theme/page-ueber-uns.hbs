@@ -1,24 +1,13 @@
 {{!< default}}
 
 <div class="container">
-    <div class="page-header">
+    <div class="page-header page-header--ueber-uns">
         <p class="section-kicker">Über Uns</p>
         <h1 class="page-title">{{@custom.ueber_uns_page_title}}</h1>
-        <p class="page-desc">{{@custom.ueber_uns_page_desc}}</p>
     </div>
-
-    {{#if content}}
-    <div class="page-content">
-        {{content}}
-    </div>
-    {{/if}}
 
     <section class="mitglieder-section">
-        <div class="mitglieder-header">
-            <p class="section-kicker">{{@custom.mitglieder_kicker}}</p>
-            <h2 class="mitglieder-title">{{@custom.mitglieder_title}}</h2>
-        </div>
-        {{#get "posts" filter="tag:mitglied" limit="50" order="published_at asc"}}
+{{#get "posts" filter="tag:mitglied" limit="50" order="published_at asc"}}
         {{#if posts}}
         <div class="mitglieder-grid">
             {{#foreach posts}}
@@ -37,9 +26,18 @@
             </div>
             {{/foreach}}
         </div>
-        {{else}}
-        <p class="mitglieder-empty">{{@custom.mitglieder_empty}}</p>
         {{/if}}
         {{/get}}
     </section>
+
+    {{#get "pages" filter="slug:ueber-uns" limit="1"}}
+    {{#foreach pages}}
+    {{#if feature_image}}
+    <img class="ueber-uns-feature-img" src="{{img_url feature_image size='l'}}" alt="{{title}}">
+    {{/if}}
+    <div class="page-content">
+        {{content}}
+    </div>
+    {{/foreach}}
+    {{/get}}
 </div>

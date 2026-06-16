@@ -86,7 +86,7 @@
             },
             "ueber_uns_page_title": {
                 "type": "text",
-                "default": "Wer wir sind.",
+                "default": "Wer dahintersteckt.",
                 "group": "Über Uns"
             },
             "ueber_uns_page_desc": {
