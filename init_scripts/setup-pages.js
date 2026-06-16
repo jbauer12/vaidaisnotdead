@@ -45,6 +45,21 @@ const PAGES = [
     status: 'published',
   },
   {
+    title:   'Über Uns',
+    slug:    'ueber-uns',
+    status:  'published',
+    initialHtml: `
+<h2>Was ist Vaida?</h2>
+<p>Vaida is not dead e.V. ist ein gemeinnütziger Kulturverein aus Viechtach im Bayerischen Wald. Wir organisieren DIY-Konzerte, offene Sessions und Abende rund um Punk, Techno und alternative Kultur – laut, unabhängig und aus der Region.</p>
+
+<h2>Warum ein Verein?</h2>
+<p>Weil Kultur einen Rahmen braucht. Der Verein gibt uns die Möglichkeit, Räume zu mieten, Veranstaltungen zu organisieren und langfristig etwas aufzubauen – getragen von Menschen, die das wollen.</p>
+
+<h2>Was bewegt uns?</h2>
+<p>Die Überzeugung, dass gute Musik und echte Begegnungen nicht in die Stadt gehören – sondern dorthin, wo die Menschen sind.</p>
+    `.trim(),
+  },
+  {
     title:  'Impressum',
     slug:   'impressum',
     status: 'published',
@@ -85,7 +100,7 @@ async function req(method, path, body) {
 
 async function findPage(slug) {
   try {
-    const data = await req('GET', `/pages/?filter=slug:${slug}&fields=id,slug`);
+    const data = await req('GET', `/pages/?filter=slug:${slug}&fields=id,slug,updated_at`);
     return data.pages?.[0] ?? null;
   } catch {
     return null;
@@ -93,12 +108,14 @@ async function findPage(slug) {
 }
 
 async function syncPage(page) {
+  const { initialHtml, ...pageData } = page;
   const existing = await findPage(page.slug);
   if (existing) {
-    await req('PUT', `/pages/${existing.id}/?source=html`, { pages: [{ ...page, updated_at: new Date().toISOString() }] });
+    await req('PUT', `/pages/${existing.id}/?source=html`, { pages: [{ ...pageData, updated_at: existing.updated_at }] });
     console.log(`  ✓ ${page.slug} [updated]`);
   } else {
-    await req('POST', '/pages/?source=html', { pages: [page] });
+    const createData = initialHtml ? { ...pageData, html: initialHtml } : pageData;
+    await req('POST', '/pages/?source=html', { pages: [createData] });
     console.log(`  ✓ ${page.slug} [created]`);
   }
 }

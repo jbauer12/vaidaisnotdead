@@ -1,6 +1,6 @@
 {{!< default}}
 
-<article>
+<article class="{{post_class}}">
     <div class="post-header container">
         {{#if primary_tag}}
             <p class="hero-kicker">{{primary_tag.name}}</p>
@@ -14,7 +14,12 @@
 
     {{#if feature_image}}
     <div class="container">
-        <img class="post-feature-image" src="{{feature_image}}" alt="{{title}}">
+        <img class="post-feature-image"
+             src="{{img_url feature_image size="l"}}"
+             srcset="{{img_url feature_image size="m"}} 600w, {{img_url feature_image size="l"}} 1000w, {{img_url feature_image size="xl"}} 2000w"
+             sizes="(max-width: 768px) 100vw, 74rem"
+             alt="{{title}}"
+             loading="lazy">
     </div>
     {{/if}}
 

@@ -21,7 +21,7 @@
         "custom": {
             "hero_lead": {
                 "type": "text",
-                "default": "DIY-Konzerte, offene Sessions und Abende zwischen Techno, Punk und allem, was dazwischen lebt.",
+                "default": "DIY-Konzerte, offene Sessions und Abende zwischen Tekno, Punk und allem, was dazwischen lebt.",
                 "group": "Home page"
             },
             "hero_events_label": {
@@ -39,41 +39,6 @@
                 "default": "Viechtach · Bayerischer Wald",
                 "group": "Home page"
             },
-            "home_upcoming_kicker": {
-                "type": "text",
-                "default": "Demnächst",
-                "group": "Home page"
-            },
-            "home_upcoming_title": {
-                "type": "text",
-                "default": "Was als Nächstes ansteht.",
-                "group": "Home page"
-            },
-            "home_aktuell_kicker": {
-                "type": "text",
-                "default": "Aktuelles",
-                "group": "Home page"
-            },
-            "home_recent_kicker": {
-                "type": "text",
-                "default": "Zuletzt",
-                "group": "Home page"
-            },
-            "ueber_uns_kicker": {
-                "type": "text",
-                "default": "Über uns",
-                "group": "Home page"
-            },
-            "home_recent_title": {
-                "type": "text",
-                "default": "Neuigkeiten aus dem Verein.",
-                "group": "Home page"
-            },
-            "events_description": {
-                "type": "text",
-                "default": "Wir machen Events rund um Punk, Techno und alternative Musik. Von rohen Live-Shows bis zu langen Clubnächten bringen wir laute, unabhängige Sounds und Szenen zusammen.",
-                "group": "Events"
-            },
             "events_upcoming_kicker": {
                 "type": "text",
                 "default": "Kommende Events",
@@ -82,16 +47,6 @@
             "events_upcoming_title": {
                 "type": "text",
                 "default": "Alles, was als Nächstes ansteht.",
-                "group": "Events"
-            },
-            "events_past_kicker": {
-                "type": "text",
-                "default": "Vergangene Events",
-                "group": "Events"
-            },
-            "events_past_title": {
-                "type": "text",
-                "default": "Was bereits gelaufen ist.",
                 "group": "Events"
             },
             "events_empty_text": {
@@ -104,20 +59,10 @@
                 "default": "Motive, Flyer und erste öffentliche Eindrücke.",
                 "group": "Galerie"
             },
-            "galerie_description": {
-                "type": "text",
-                "default": "Fotos, Artwork und Eindrücke vergangener Abende.",
-                "group": "Galerie"
-            },
             "faq_title": {
                 "type": "text",
                 "default": "Häufig gestellte Fragen",
                 "group": "FAQ"
-            },
-            "nav_logo": {
-                "type": "text",
-                "default": "",
-                "group": "Kontakt"
             },
             "contact_email": {
                 "type": "text",
@@ -131,22 +76,47 @@
             },
             "mitglied_description": {
                 "type": "text",
-                "default": "Als Fördermitglied unterstützt du Vaida is not dead mit einem monatlichen Beitrag. Du hilfst dabei, Räume, Technik und Abende möglich zu machen – und kannst dich einbringen, so viel oder wenig du willst.",
+                "default": "Als Fördermitglied unterstützt du Vaida is not dead mit einem monatlichen oder jährlichen Beitrag. Du hilfst dabei, Räume, Technik und Abende möglich zu machen.",
                 "group": "Mitglied werden"
             },
             "foerder_lead": {
                 "type": "text",
-                "default": "Du trägst den Verein finanziell und schaffst damit die Basis für alles, was wir machen. Ob du bei Abenden und Organisation dabei bist oder nur im Hintergrund unterstützt – beides ist wertvoll.",
+                "default": "Dein Beitrag hält den Verein am Laufen – und machst damit den ganzen Rest erst möglich. Im Hintergrund läuft durch dich der Laden, ohne dass du dich um Abende oder Orga kümmern musst. Und wenn du Lust auf mehr hast: Meld dich einfach bei uns, dann schauen wir weiter. Trau dich gerne!",
                 "group": "Mitglied werden"
             },
-            "foerder_note": {
+            "ueber_uns_page_title": {
                 "type": "text",
-                "default": "Dein Beitrag macht möglich, was sonst nicht stattfinden würde.",
-                "group": "Mitglied werden"
+                "default": "Wer wir sind.",
+                "group": "Über Uns"
+            },
+            "ueber_uns_page_desc": {
+                "type": "text",
+                "default": "Ein Verein, der DIY-Kultur im Bayerischen Wald lebt.",
+                "group": "Über Uns"
+            },
+            "mitglieder_kicker": {
+                "type": "text",
+                "default": "Das Team",
+                "group": "Über Uns"
+            },
+            "mitglieder_title": {
+                "type": "text",
+                "default": "Wer dahintersteckt.",
+                "group": "Über Uns"
+            },
+            "mitglieder_empty": {
+                "type": "text",
+                "default": "Hier stellen wir uns bald vor.",
+                "group": "Über Uns"
             },
             "instagram_url": {
                 "type": "text",
                 "default": "https://www.instagram.com/vaidaisnotdead_ev/",
+                "group": "Kontakt"
+            },
+            "web3forms_key": {
+                "type": "text",
+                "default": "2a5f9e0f-bfac-4c79-bb73-165c621bfdef",
                 "group": "Kontakt"
             }
         }

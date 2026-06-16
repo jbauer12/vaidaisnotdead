@@ -26,38 +26,7 @@ const GHOST_URL     = LOCAL ? process.env.GHOST_LOCAL_URL : process.env.GHOST_UR
 // ╚══════════════════════════════════════════════════════════════════════╝
 
 const EVENTS = [
-  {
-    title:    'Bürgerfest Viechtach 2026',
-    slug:     'buergerfest-viechtach-2026',
-    date:     '2026-07-03',
-    strip:    '3.–5. Juli 2026 · Viechtach | Eintritt frei | Bewerbungen für Acts offen',
-    featured: true,
-    image:    './buergerfest_post_home_site.png',
-    content: `
-      <p>
-        Ob laut, tanzbar, experimentell oder ganz entspannt: willkommen sind Acts mit eigenem
-        Stil und Lust auf ein offenes Stadtfest-Wochenende.
-      </p>
 
-      <h2>Wann & Wo</h2>
-      <p>
-        <strong>Freitag, 3. Juli – Sonntag, 5. Juli 2026</strong><br>
-        Viechtach, Bayerischer Wald
-      </p>
-
-      <h2>Wir suchen Acts</h2>
-      <ul>
-        <li>Bands, Solo-Acts und Kollektive aus dem Umfeld von Punk, Techno, Folk und allem dazwischen</li>
-        <li>DJs für die Abende zwischen den Live-Slots</li>
-        <li>Bereitschaft, Teil eines offenen, nicht-kommerziellen Stadtfest-Rahmens zu sein</li>
-      </ul>
-
-      <p>
-        Bewerbungen und Fragen an
-        <a href="mailto:info@vaidaisnotdead.de">info@vaidaisnotdead.de</a>.
-      </p>
-    `,
-  },
 ];
 
 // Slugs to permanently delete

@@ -1,20 +1,78 @@
 // facebook-events.js
 //
-// Facebook blocks automated scraping, so event details must be filled in manually.
-// Copy the info from the Facebook event page and paste it below.
+// Partially auto-fetches Facebook event metadata (OG tags) using the
+// facebookexternalhit UA. Lineup, pricing, and image still need manual input.
 //
-// Run with: node facebook-events.js
-//
-// This script is a template — duplicate it for future Facebook events.
+// Run with:         node facebook-events.js
+// Fetch OG data:    node facebook-events.js --fetch-meta <url>
+// Dry run (local):  node facebook-events.js --local
 
 import 'dotenv/config';
 import { createHmac } from 'crypto';
 import { readFileSync, existsSync } from 'fs';
 
-const LOCAL = process.argv.includes('--local');
+const LOCAL     = process.argv.includes('--local');
+const FETCH_META = process.argv.includes('--fetch-meta');
 
 const ADMIN_API_KEY = LOCAL ? process.env.GHOST_LOCAL_ADMIN_API_KEY : process.env.GHOST_ADMIN_API_KEY;
 const GHOST_URL     = LOCAL ? process.env.GHOST_LOCAL_URL : process.env.GHOST_URL;
+
+// ── Meta helper ───────────────────────────────────────────────────────────────
+// Uses facebookexternalhit UA — the only UA Facebook serves OG tags to.
+// Returns { title, date, location, imageUrl, raw } or throws.
+async function fetchFacebookMeta(url) {
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+      'Accept-Language': 'de-DE,de;q=0.9,en;q=0.8',
+    },
+  });
+  const html = await res.text();
+
+  const og = (prop) => {
+    const m = html.match(new RegExp(`property="og:${prop}"\\s+content="([^"]+)"`));
+    return m ? m[1] : null;
+  };
+
+  const title       = og('title');
+  const description = og('description'); // e.g. "Veranstaltung in Viechtach … am Freitag, Mai 22 2026"
+  const imageUrl    = og('image');
+
+  // Parse "am Freitag, Mai 22 2026" → ISO date
+  const dateMatch = description?.match(/(\w+),\s+(\w+)\s+(\d{1,2})\s+(\d{4})/);
+  const MONTHS = { Januar:1,Februar:2,März:3,April:4,Mai:5,Juni:6,Juli:7,
+                   August:8,September:9,Oktober:10,November:11,Dezember:12,
+                   January:1,February:2,March:3,April:4,May:5,June:6,July:7,
+                   August:8,September:9,October:10,November:11,December:12 };
+  let date = 'YYYY-MM-DD';
+  if (dateMatch) {
+    const [, , mon, day, year] = dateMatch;
+    const m = MONTHS[mon];
+    if (m) date = `${year}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  }
+
+  // Parse location from "Veranstaltung in <location> von …"
+  const locMatch = description?.match(/Veranstaltung in (.+?) von /);
+  const location = locMatch ? locMatch[1] : null;
+
+  return { title, date, location, imageUrl, description };
+}
+
+// --fetch-meta mode: print parsed metadata and exit
+if (FETCH_META) {
+  const url = process.argv[process.argv.indexOf('--fetch-meta') + 1];
+  if (!url) { console.error('Usage: node facebook-events.js --fetch-meta <url>'); process.exit(1); }
+  fetchFacebookMeta(url).then(meta => {
+    console.log('\n── Facebook OG metadata ─────────────────────────────────');
+    console.log(`  title:    ${meta.title}`);
+    console.log(`  date:     ${meta.date}`);
+    console.log(`  location: ${meta.location}`);
+    console.log(`  image:    ${meta.imageUrl}`);
+    console.log(`  raw desc: ${meta.description}`);
+    console.log('\nCopy this into the EVENTS array and fill in the rest.\n');
+  }).catch(err => { console.error(err.message); process.exit(1); });
+  // Don't fall through to main()
+} else {
 
 // ╔══════════════════════════════════════════════════════════════════════╗
 // ║  EVENTS — fill in from the Facebook event page                       ║
@@ -51,6 +109,39 @@ const EVENTS = [
       <p>
         Mehr Infos auf der
         <a href="https://www.facebook.com/events/776787775046871/" target="_blank" rel="noopener">Facebook-Veranstaltungsseite</a>.
+      </p>
+    `,
+  },
+
+  // ── https://www.facebook.com/events/3374098399435770 ──────────────────
+  // OG meta auto-fetched 2026-05-21 · lineup/price/image: fill in manually
+  {
+    title:    '10 Jahre Habgier + Birthday Bash',
+    slug:     '10-jahre-habgier-birthday-bash-2026',
+    date:     '2026-05-22',                              // Freitag, 22. Mai 2026
+    strip:    '22. Mai 2026 | KulturCafé Hinkofer, Viechtach | Vaida is not dead e.V. × Habgier',
+    image:    null,                                      // TODO: add poster image path
+    featured: false,
+    facebook: 'https://www.facebook.com/events/3374098399435770',
+    content: `
+      <p>
+        10 Jahre Habgier – das wird gefeiert! Vaida is not dead e.V. und Habgier
+        laden ein zu einer Jubiläumsnacht im KulturCafé Hinkofer, Viechtach.
+      </p>
+
+      <h2>Line-up</h2>
+      <ul>
+        <li><strong>TODO: Band 1</strong></li>
+        <li><strong>TODO: Band 2</strong></li>
+      </ul>
+
+      <!-- TODO: After-Show / Keller-Info ergänzen -->
+      <!-- TODO: Einlass-Zeit und AK-Preis ergänzen -->
+
+      <p>No Idiots – No Nazis – No Sexists – No AfD</p>
+
+      <p>
+        <a href="https://www.facebook.com/events/3374098399435770" target="_blank" rel="noopener">Facebook-Veranstaltungsseite</a>
       </p>
     `,
   },
@@ -205,3 +296,4 @@ async function main() {
 }
 
 main().catch(console.error);
+}

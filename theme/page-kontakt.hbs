@@ -4,21 +4,15 @@
     <div class="page-header">
         <p class="section-kicker">Kontakt</p>
         <h1 class="page-title">Schreib uns.</h1>
-        <p class="page-desc">Egal ob Fördermitgliedschaft, Fragen, Kooperationen oder einfach Hallo – wir freuen uns über Nachrichten.</p>
+        <p class="page-desc">Egal ob Fragen, Kooperationen oder einfach Hallo – wir freuen uns über Nachrichten.</p>
     </div>
 
     <div class="kontakt-wrap">
         <div class="kontakt-card">
 
-            <label class="foerder-toggle-wrap" for="foerder-toggle">
-                <input type="checkbox" class="foerder-toggle-inp" id="foerder-toggle">
-                <span class="foerder-toggle-track"></span>
-                <span class="foerder-toggle-label">Fördermitgliedschaft anfragen</span>
-            </label>
-
             <form id="kontakt-form">
                 {{! Web3Forms access key }}
-                <input type="hidden" name="access_key" value="2a5f9e0f-bfac-4c79-bb73-165c621bfdef">
+                <input type="hidden" name="access_key" value="{{@custom.web3forms_key}}">
                 <input type="hidden" name="subject" id="k-subject">
                 <input type="hidden" name="from_name" id="k-from-name">
                 {{! Honeypot spam protection }}
@@ -73,42 +67,20 @@
 
 <script>
 (function () {
-    var checkbox   = document.getElementById('foerder-toggle');
-    var betreffGrp = document.getElementById('betreff-group');
     var betreffInp = document.getElementById('k-betreff');
-    var msgInp     = document.getElementById('k-message');
     var form       = document.getElementById('kontakt-form');
     var submitBtn  = document.getElementById('k-submit');
     var errorEl    = document.getElementById('k-error');
     var successEl  = document.getElementById('kontakt-success');
 
-    var placeholders = {
-        foerder: 'Erzähl kurz, was dich bewegt oder warum du den Verein unterstützen willst.',
-        other:   'Deine Nachricht …'
-    };
-
-    function apply() {
-        var isFoerder = checkbox.checked;
-        betreffGrp.classList.toggle('betreff-group--visible', !isFoerder);
-        betreffInp.required = !isFoerder;
-        msgInp.placeholder  = isFoerder ? placeholders.foerder : placeholders.other;
-    }
-
-    checkbox.addEventListener('change', apply);
-
-    var param = new URLSearchParams(window.location.search).get('grund');
-    if (param === 'foerdermitgliedschaft') checkbox.checked = true;
-    apply();
-
     form.addEventListener('submit', function (e) {
         e.preventDefault();
-        var isFoerder = checkbox.checked;
         var name = document.getElementById('k-name').value;
 
         document.getElementById('k-from-name').value = name;
-        document.getElementById('k-subject').value   = isFoerder
-            ? 'Fördermitgliedschaft – ' + name
-            : (betreffInp.value ? betreffInp.value + ' – ' + name : 'Kontakt – ' + name);
+        document.getElementById('k-subject').value   = betreffInp.value
+            ? betreffInp.value + ' – ' + name
+            : 'Kontakt – ' + name;
 
         submitBtn.disabled    = true;
         submitBtn.textContent = 'Wird gesendet …';
@@ -122,18 +94,17 @@
         .then(function (r) { return r.json(); })
         .then(function (data) {
             if (data.success) {
-                form.style.display         = 'none';
-                document.querySelector('.foerder-toggle-wrap').style.display = 'none';
-                successEl.style.display    = 'flex';
+                form.style.display      = 'none';
+                successEl.style.display = 'flex';
             } else {
                 throw new Error(data.message || 'Unbekannter Fehler');
             }
         })
         .catch(function (err) {
-            errorEl.textContent    = 'Fehler: ' + err.message + ' – bitte direkt per Mail schreiben.';
-            errorEl.style.display  = '';
-            submitBtn.disabled     = false;
-            submitBtn.textContent  = 'Nachricht senden';
+            errorEl.textContent   = 'Fehler: ' + err.message + ' – bitte direkt per Mail schreiben.';
+            errorEl.style.display = '';
+            submitBtn.disabled    = false;
+            submitBtn.textContent = 'Nachricht senden';
         });
     });
 }());
